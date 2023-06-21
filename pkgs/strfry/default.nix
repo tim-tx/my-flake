@@ -15,14 +15,14 @@
 
 stdenv.mkDerivation {
   pname = "strfry";
-  version = "master-f192adb4-git";
+  version = "master-e4e79af1-git";
 
   src = fetchFromGitHub {
     owner = "hoytech";
     repo = "strfry";
-    rev = "f192adb4982279f730c35f3d255cd75301239466";
+    rev = "e4e79af1214e38ea90f4d099bd1f057a688abdb6";
     fetchSubmodules = true;
-    sha256 = "sha256-KIuEOQZYwuzN0HskQmO7vyfAO/W0ye5pJO6IunY/PDg=";
+    sha256 = "sha256-jWhiYKuFcAOHNIo9wtH/B0rArz1S+XAEtVlWAGif/CA=";
   };
 
   patches = [
