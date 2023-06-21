@@ -1,0 +1,20 @@
+diff --git a/apps/smp-server/Main.hs b/apps/smp-server/Main.hs
+index 07dbc51..93012cf 100644
+--- a/apps/smp-server/Main.hs
++++ b/apps/smp-server/Main.hs
+@@ -1,5 +1,6 @@
+ module Main where
+ 
++import System.Environment (lookupEnv)
+ import Control.Logger.Simple
+ import Simplex.Messaging.Server.Main
+ 
+@@ -14,5 +15,7 @@ logCfg = LogConfig {lc_file = Nothing, lc_stderr = True}
+ 
+ main :: IO ()
+ main = do
++  cfgPath' <- maybe cfgPath id <$> lookupEnv "SIMPLEXMQ_CONFIG"
++  logPath' <- maybe logPath id <$> lookupEnv "SIMPLEXMQ_LOG"
+   setLogLevel LogDebug
+-  withGlobalLogging logCfg $ smpServerCLI cfgPath logPath
++  withGlobalLogging logCfg $ smpServerCLI cfgPath' logPath'
