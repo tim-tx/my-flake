@@ -5,8 +5,8 @@
   inputs.nixpkgs.url = "nixpkgs/nixos-22.11";
 
   outputs = { self, nixpkgs }: {
-    packages."x86_64-linux" = let
-      pkgs = nixpkgs.legacyPackages."x86_64-linux";
+    packages.x86_64-linux = let
+      pkgs = nixpkgs.legacyPackages.x86_64-linux;
     in {
       notbit    = pkgs.callPackage ./pkgs/notbit    { };
       simplexmq = pkgs.callPackage ./pkgs/simplexmq { };
