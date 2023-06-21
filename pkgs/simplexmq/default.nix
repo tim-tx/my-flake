@@ -124,12 +124,9 @@ hp.mkDerivation {
   executableHaskellDepends = execDeps;
   testHaskellDepends = testDeps;
 
-  doCheck = false;              # tests hang
+  homepage = "https://github.com/simplex-chat/simplexmq";
+  description = "SimpleXMQ - A reference implementation of the SimpleX Messaging Protocol for simplex queues over public networks";
+  license = lib.licenses.agpl3Only;
 
-  meta = with lib; {
-    homepage = "https://github.com/simplex-chat/simplexmq";
-    description = "SimpleXMQ - A reference implementation of the SimpleX Messaging Protocol for simplex queues over public networks";
-    platforms = platforms.linux;
-    license = licenses.agpl3Only;
-  };
+  doCheck = false;              # tests hang
 }
