@@ -12,6 +12,11 @@
       simplexmq = pkgs.callPackage ./pkgs/simplexmq { };
       strfry    = pkgs.callPackage ./pkgs/strfry    { };
     };
+    nixosModules = {
+      i2pd      = import ./modules/i2pd.nix      self;
+      simplexmq = import ./modules/simplexmq.nix self;
+      strfry    = import ./modules/strfry.nix    self;
+    };
   };
 
 }
