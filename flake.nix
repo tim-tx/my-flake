@@ -13,9 +13,13 @@
       strfry    = pkgs.callPackage ./pkgs/strfry    { };
     };
     nixosModules = {
-      i2pd      = import ./modules/i2pd.nix      self;
-      simplexmq = import ./modules/simplexmq.nix self;
-      strfry    = import ./modules/strfry.nix    self;
+      default = { config, ... }: {
+        imports = [
+          (import ./modules/i2pd.nix self)
+          (import ./modules/simplexmq.nix self)
+          (import ./modules/strfry.nix self)
+        ];
+      };
     };
   };
 
