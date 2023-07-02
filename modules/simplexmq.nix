@@ -22,6 +22,20 @@ in
       defaultText = lib.literalExpression "pkgs.simplexmq";
       description = lib.mdDoc "SimpleXMQ package to use";
     };
+    user = lib.mkOption {
+      type = lib.types.str;
+      default = "simplexmq";
+      description = lib.mdDoc ''
+        User to run simplexmq as.
+      '';
+    };
+    group = lib.mkOption {
+      type = lib.types.str;
+      default = "simplexmq";
+      description = lib.mdDoc ''
+        Group to run simplexmq as.
+      '';
+    };
     passwordFile = lib.mkOption {
       type = lib.types.path;
       description = ''
@@ -90,6 +104,7 @@ in
             host = lib.mkOption {
               type = lib.types.str;
               description = lib.mdDoc "Only used to print server address on start";
+              default = config.networking.hostName;
             };
             port = lib.mkOption {
               type = lib.types.int;
@@ -109,14 +124,14 @@ in
               type = lib.types.bool;
               default = false;
             };
-            ttl = lib.mkOption {
-              type = lib.types.int;
-              example = 86400;
-            };
-            check_interval = lib.mkOption {
-              type = lib.types.int;
-              example = 43200;
-            };
+            # ttl = lib.mkOption {
+            #   type = lib.types.int;
+            #   example = 86400;
+            # };
+            # check_interval = lib.mkOption {
+            #   type = lib.types.int;
+            #   example = 43200;
+            # };
           };
         };
       };
@@ -127,27 +142,41 @@ in
     configDir = "${workingDir}/config";
     logDir = "${workingDir}/log";
   in lib.mkIf cfg.enable {
-    systemd.services.simplexmq = {
-      after = [ "network.target" ];
-      wantedBy = [ "multi-user.target" ];
-      script = ''
-        PASSWORD=$(cat ''${CREDENTIALS_DIRECTORY}/password_file)
-        ${pkgs.envsubst}/bin/envsubst -i ${configFile} -o ${configDir}/smp-server.ini
-        ${cfg.package}/bin/smp-server start
-      '';
-      serviceConfig = {
-        WorkingDirectory = workingDir;
-        StateDirectory = builtins.baseNameOf workingDir;
-        RuntimeDirectory = builtins.baseNameOf workingDir;
-        Restart = "on-failure";
-        # ExecStart = "${cfg.package}/bin/smp-server start";
-        Environment = [
-          "SIMPLEXMQ_CONFIG=${configDir}"
-          "SIMPLEXMQ_LOG=${logDir}"
-        ];
-        LoadCredential = lib.mkIf (cfg.passwordFile != null) "password_file:" + builtins.toString cfg.passwordFile;
+
+    systemd.services = {
+      simplexmq = {
+        after = [ "network.target" ];
+        wantedBy = [ "multi-user.target" ];
+        script = ''
+          [ ! -f "${configDir}/server.key" ] && (yes | ${cfg.package}/bin/smp-server init)
+          PASSWORD=$(cat ''${CREDENTIALS_DIRECTORY}/password_file)
+          ${pkgs.envsubst}/bin/envsubst -i ${configFile} -o ${configDir}/smp-server.ini
+          ${cfg.package}/bin/smp-server start
+        '';
+        serviceConfig = {
+          User = "simplexmq";
+          Group = "simplexmq";
+          WorkingDirectory = workingDir;
+          StateDirectory = builtins.baseNameOf workingDir;
+          RuntimeDirectory = builtins.baseNameOf workingDir;
+          Restart = "on-failure";
+          # ExecStart = "${cfg.package}/bin/smp-server start";
+          Environment = [
+            "SIMPLEXMQ_CONFIG=${configDir}"
+            "SIMPLEXMQ_LOG=${logDir}"
+          ];
+          LoadCredential = lib.mkIf (cfg.passwordFile != null) ("password_file:" + builtins.toString cfg.passwordFile);
+        };
       };
     };
+
+    users.groups.simplexmq = {};
+    users.users.simplexmq = {
+      isSystemUser = true;
+      description = "simplexmq user";
+      group = "simplexmq";
+    };
+
   };
 
 }
