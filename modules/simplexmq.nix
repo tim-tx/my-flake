@@ -10,7 +10,7 @@ let
         u = lib.generators.mkValueStringDefault {} v;
       in if u == "true" then "on" else (if u == "false" then "off" else u);
     } ": ";
-  } lib.attrsets.recursiveUpdate cfg.settings (if cfg.passwordFile != null then { AUTH.create_password = "$PASSWORD"; } else {}));
+  } (lib.attrsets.recursiveUpdate cfg.settings (if cfg.passwordFile != null then { AUTH.create_password = "$PASSWORD"; } else {})));
 in
 {
 
