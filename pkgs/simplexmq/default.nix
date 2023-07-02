@@ -1,6 +1,7 @@
 { lib
 , fetchFromGitHub
 , haskell
+, openssl
 }:
 
 let
@@ -116,6 +117,9 @@ hp.mkDerivation {
   };
 
   patches = [ ./config-env-vars.patch ];
+  preConfigure = ''
+    sed -i 's#run \$ "openssl#run \$ "${openssl}/bin/openssl#' src/Simplex/Messaging/Server/CLI.hs
+  '';
 
   isLibrary = true;
   isExecutable = true;
@@ -128,5 +132,5 @@ hp.mkDerivation {
   description = "SimpleXMQ - A reference implementation of the SimpleX Messaging Protocol for simplex queues over public networks";
   license = lib.licenses.agpl3Only;
 
-  doCheck = false;              # tests hang
+  doCheck = false;              # tests hang, may have PATH issues
 }
