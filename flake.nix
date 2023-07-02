@@ -4,14 +4,17 @@
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
 
-  outputs = { self, nixpkgs }: {
-    packages.x86_64-linux = let
-      pkgs = nixpkgs.legacyPackages.x86_64-linux;
+  outputs = { self, nixpkgs }: let
+    systems = [ "x86_64-linux" ];
+    forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
+  in {
+    packages = forAllSystems (system: let
+      pkgs = nixpkgs.legacyPackages."${system}";
     in {
       notbit    = pkgs.callPackage ./pkgs/notbit    { };
       simplexmq = pkgs.callPackage ./pkgs/simplexmq { };
       strfry    = pkgs.callPackage ./pkgs/strfry    { };
-    };
+    });
     nixosModules = {
       default = { config, ... }: {
         imports = [
