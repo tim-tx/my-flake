@@ -28,20 +28,6 @@ in
 
   options.services.strfry = {
     enable = lib.mkEnableOption (lib.mdDoc "strfry nostr relay");
-    user = lib.mkOption {
-      type = lib.types.str;
-      default = "strfry";
-      description = lib.mdDoc ''
-        User to run strfry as.
-      '';
-    };
-    group = lib.mkOption {
-      type = lib.types.str;
-      default = "strfry";
-      description = lib.mdDoc ''
-        Group to run strfry as.
-      '';
-    };
     settings = lib.mkOption {
       type = lib.types.submodule {
         freeformType = lib.types.lazyAttrsOf (lib.types.uniq lib.types.unspecified);
