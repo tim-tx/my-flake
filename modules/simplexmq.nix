@@ -149,7 +149,7 @@ in
         wantedBy = [ "multi-user.target" ];
         script = ''
           [ ! -f "${configDir}/server.key" ] && (yes | ${cfg.package}/bin/smp-server init)
-          PASSWORD=$(cat ''${CREDENTIALS_DIRECTORY}/password_file)
+          PASSWORD=$(cat ''${CREDENTIALS_DIRECTORY}/password_file 2>/dev/null) \
           ${pkgs.envsubst}/bin/envsubst -i ${configFile} -o ${configDir}/smp-server.ini
           ${cfg.package}/bin/smp-server start
         '';
@@ -160,7 +160,6 @@ in
           StateDirectory = builtins.baseNameOf workingDir;
           RuntimeDirectory = builtins.baseNameOf workingDir;
           Restart = "on-failure";
-          # ExecStart = "${cfg.package}/bin/smp-server start";
           Environment = [
             "SIMPLEXMQ_CONFIG=${configDir}"
             "SIMPLEXMQ_LOG=${logDir}"

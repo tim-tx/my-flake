@@ -118,7 +118,9 @@ hp.mkDerivation {
 
   patches = [ ./config-env-vars.patch ];
   preConfigure = ''
-    sed -i 's#run \$ "openssl#run \$ "${openssl}/bin/openssl#' src/Simplex/Messaging/Server/CLI.hs
+    sed -i -e 's#run \$ "openssl#run \$ "${openssl}/bin/openssl#' \
+           -e 's#" <> strEncode srv#[scrubbed]"#' \
+    src/Simplex/Messaging/Server/CLI.hs
   '';
 
   isLibrary = true;
