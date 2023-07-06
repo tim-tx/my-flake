@@ -2,7 +2,7 @@
 
   description = "A few packages and modules not in nixpkgs";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
 
   outputs = { self, nixpkgs }: let
     systems = [ "x86_64-linux" ];
