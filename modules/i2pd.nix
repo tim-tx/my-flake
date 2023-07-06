@@ -4,15 +4,17 @@ with lib;
 
 let
 
+  formats = (import ./formats.nix) { inherit lib; inherit pkgs; }; # withGlobalSection
+
   cfg = config.services.i2pd;
 
-  settingsFormat = pkgs.formats.ini { withGlobalSection = true; };
+  settingsFormat = formats.ini { withGlobalSection = true; };
   i2pdConf = settingsFormat.generate "i2pd.conf" {
     globalSection = if hasAttr "global" cfg.settings then cfg.settings.global else { };
     sections = removeAttrs cfg.settings [ "global" ];
   };
 
-  tunnelsFormat = pkgs.formats.ini { };
+  tunnelsFormat = formats.ini { };
   tunnelsConf = tunnelsFormat.generate "tunnels.conf" cfg.tunnels;
 
   i2pdFlags = concatStringsSep " " [
