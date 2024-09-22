@@ -15,19 +15,19 @@
 
 stdenv.mkDerivation {
   pname = "strfry";
-  version = "master-e4e79af1-git";
+  version = "master-32a36773-git";
 
   src = fetchFromGitHub {
     owner = "hoytech";
     repo = "strfry";
-    rev = "e4e79af1214e38ea90f4d099bd1f057a688abdb6";
+    rev = "32a367738c6db7430780058c4a6c98b271af73b2";
     fetchSubmodules = true;
-    sha256 = "sha256-jWhiYKuFcAOHNIo9wtH/B0rArz1S+XAEtVlWAGif/CA=";
+    sha256 = "sha256-lHoMyFdN3q+lDks7mxC73l5DXe7nUuq+xoqYlXCrmPs=";
   };
 
-  patches = [
-    ./fix-make-rules.patch
-  ];
+  # patches = [
+  #   ./fix-make-rules.patch
+  # ];
 
   buildInputs = [
     flatbuffers
@@ -36,6 +36,7 @@ stdenv.mkDerivation {
     lmdb
     openssl
     perl
+    perlPackages.RegexpGrammars
     perlPackages.TemplateToolkit
     perlPackages.YAML
     secp256k1
