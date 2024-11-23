@@ -18,7 +18,6 @@
     nixosModules = {
       default = { config, ... }: {
         imports = [
-          (import ./modules/dendrite.nix self)
           (import ./modules/i2pd.nix self)
           (import ./modules/simplexmq.nix self)
           (import ./modules/strfry.nix self)
